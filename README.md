@@ -1,16 +1,15 @@
-# 🎯 Simaksi Gunung - Sistem Manajemen Akademik
+# �️ SIMAKSI Gunung - Sistem Informasi Manajemen Pendakian Gunung
 
-Aplikasi web modern untuk login, registrasi, dan manajemen akademik dengan desain yang menarik.
+Aplikasi web untuk login user dan admin untuk sistem manajemen pendakian gunung di Indonesia.
 
-## ✨ Fitur Utama
+## ✨ Fitur
 
-- ✅ Halaman Login dengan validasi
-- ✅ Halaman Registrasi dengan form lengkap
-- ✅ Dashboard user dengan profil
-- ✅ Autentikasi JWT
+- ✅ Halaman Login User (dengan registrasi)
+- ✅ Halaman Login Admin
+- ✅ Autentikasi JWT terpisah untuk user dan admin
 - ✅ Password hashing dengan BCrypt
 - ✅ Desain modern dan responsive
-- ✅ Gradien background yang menarik
+- ✅ Form validasi lengkap
 
 ## 🛠️ Tech Stack
 
@@ -28,44 +27,57 @@ Aplikasi web modern untuk login, registrasi, dan manajemen akademik dengan desai
 
 ## 🚀 Cara Menjalankan
 
-### 1. Setup Backend
+### Single Command (Recommended)
+Dari root directory, jalankan kedua server sekaligus:
 
+```bash
+npm run dev
+```
+
+Ini akan menjalankan:
+- Backend di `http://localhost:5000`
+- Frontend di `http://localhost:3001`
+
+### Atau Manual
+
+**Terminal 1 - Backend:**
 ```bash
 cd server
 npm install
 npm start
 ```
 
-Server akan berjalan di `http://localhost:5000`
-
-### 2. Setup Frontend
-
-Buka terminal baru:
-
+**Terminal 2 - Frontend:**
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-Frontend akan berjalan di `http://localhost:3000`
-
 ## 📝 User Testing
 
-Setelah kedua aplikasi berjalan:
-
-### User Registration
+### User - Registrasi & Login
 1. Buka http://localhost:3001
-2. Klik "Daftar sekarang"
-3. Isi form dengan data Anda
-4. Setelah registrasi, Anda akan otomatis login
-5. Dashboard menampilkan profil Anda
+2. Klik "Belum punya akun? Daftar di sini"
+3. Isi form registrasi:
+   - Nama Lengkap
+   - Email
+   - Password (min 6 karakter)
+4. Klik "Daftar"
+5. Otomatis login dan masuk ke dashboard
 
-### Admin Login
+### User - Login
+1. Buka http://localhost:3001
+2. Isi email dan password
+3. Klik "Login"
+
+### Admin - Login
 1. Buka http://localhost:3001/admin/login
-2. Email: `admin@gunung.com`
-3. Password: `admin123456`
-4. Anda akan masuk ke Admin Panel untuk mengelola user
+2. Gunakan kredensial:
+   - **Email:** `admin@gunung.com`
+   - **Password:** `admin123456`
+3. Klik "Login Admin"
+4. Masuk ke Admin Dashboard
 
 ## 🎨 Desain
 
@@ -87,22 +99,31 @@ Setelah kedua aplikasi berjalan:
 ```
 project_simaksi_gunung/
 ├── server/
-│   ├── index.js          # API server
+│   ├── index.js              # Express API server
 │   ├── package.json
-│   └── .env.example
+│   └── node_modules/
 │
-└── client/
-    ├── src/
-    │   ├── pages/
-    │   │   ├── Login.jsx
-    │   │   ├── Register.jsx
-    │   │   └── Dashboard.jsx
-    │   ├── App.jsx
-    │   ├── main.jsx
-    │   ├── api.js
-    │   └── index.css
-    ├── index.html
-    └── package.json
+├── client/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Login.jsx         # User login page
+│   │   │   ├── Register.jsx      # User register page
+│   │   │   ├── Dashboard.jsx     # User dashboard
+│   │   │   ├── AdminLogin.jsx    # Admin login page
+│   │   │   └── AdminDashboard.jsx # Admin dashboard
+│   │   ├── api.js                # API service layer
+│   │   ├── App.jsx               # Main router component
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+│
+├── package.json                  # Root config (npm run dev)
+├── README.md
+└── .gitignore
 ```
 
 ## 🔐 Security
@@ -111,32 +132,46 @@ project_simaksi_gunung/
 - JWT token dengan expiration 24 jam
 - CORS protection
 - Input validation di frontend dan backend
-- Error handling yang aman
+- Separate authentication untuk user dan admin
 
 ## 📚 API Endpoints
 
 ```
-POST   /api/auth/register    - Registrasi user
+POST   /api/auth/register    - Registrasi user baru
 POST   /api/auth/login       - Login user
-GET    /api/auth/verify      - Verifikasi token
+GET    /api/auth/verify      - Verifikasi token user
+
+POST   /api/admin/login      - Login admin
+GET    /api/admin/verify     - Verifikasi token admin
 ```
 
-## 🎯 Fitur Dashboard
+## 🎯 Pages
 
-- Tampilkan nama lengkap, email, ID user
-- Status user (Aktif)
-- Quick access menu
-- Fitur akademik, jadwal, pesan, laporan
-- Tombol logout
+### User Flows
+- **Login** (`/login`) - User login dengan email & password
+- **Register** (`/register`) - User registrasi akun baru
+- **Dashboard** (`/dashboard`) - User dashboard dengan profil
 
-## 👨‍💼 Admin Panel
+### Admin Flows
+- **Admin Login** (`/admin/login`) - Admin login
+- **Admin Dashboard** (`/admin/dashboard`) - Admin panel untuk manage user
 
-### Fitur Admin
-- ✅ Login admin terpisah dengan password khusus
-- ✅ Dashboard admin dengan statistik user
-- ✅ Daftar semua user terdaftar
-- ✅ Hapus user jika diperlukan
-- ✅ Akses management sistem
+## 💾 Test Credentials
+
+### Admin
+- **Email:** `admin@gunung.com`
+- **Password:** `admin123456`
+
+### User Test
+- **Email:** Daftar akun baru via register page
+- **Password:** Sesuai yang Anda buat saat registrasi
+
+## 📝 Development Notes
+
+- Frontend menggunakan Vite + React 18 untuk development yang cepat
+- Backend menggunakan Express.js dengan simple in-memory storage untuk demo
+- Untuk production, integrasikan dengan database seperti MongoDB atau PostgreSQL
+- Token disimpan di localStorage untuk persistence login
 
 ### Admin Credentials
 - Email: `admin@gunung.com`
