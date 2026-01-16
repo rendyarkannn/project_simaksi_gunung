@@ -18,6 +18,10 @@ app.use(express.json());
 // Simple in-memory database
 let users = [];
 
+// Admin credentials (hardcoded untuk demo)
+const ADMIN_EMAIL = 'admin@gunung.com';
+const ADMIN_PASSWORD = 'admin123456'; // akan di-hash
+
 // Validation Middleware
 const validateRegister = [
   body('fullName').notEmpty().withMessage('Nama lengkap wajib diisi'),
@@ -162,6 +166,123 @@ app.get('/api/auth/verify', (req, res) => {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Server berjalan dengan baik' });
+});
+
+// ===== ADMIN ROUTES =====
+
+// Admin Login
+app.post('/api/admin/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (email !== ADMIN_EMAIL) {
+      return res.status(401).json({ message: 'Email admin tidak valid' });
+    }
+
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ message: 'Password admin salah' });
+    }
+
+    const token = jwt.sign(
+      { id: 'admin', email: ADMIN_EMAIL, role: 'admin' },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      message: 'Login admin berhasil',
+      token,
+      user: {
+        id: 'admin',
+        email: ADMIN_EMAIL,
+        role: 'admin',
+        name: 'Administrator'
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Terjadi kesalahan server' });
+  }
+});
+
+// Get all users (admin only)
+app.get('/api/admin/users', (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Token tidak ditemukan' });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang dapat mengakses' });
+    }
+
+    res.json({
+      total: users.length,
+      users: users.map(user => ({
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        createdAt: user.createdAt
+      }))
+    });
+  } catch (error) {
+    res.status(401).json({ message: 'Token tidak valid' });
+  }
+});
+
+// Delete user (admin only)
+app.delete('/api/admin/users/:id', (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Token tidak ditemukan' });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang dapat mengakses' });
+    }
+
+    const userIndex = users.findIndex(u => u.id === req.params.id);
+    if (userIndex === -1) {
+      return res.status(404).json({ message: 'User tidak ditemukan' });
+    }
+
+    const deletedUser = users.splice(userIndex, 1);
+    res.json({ 
+      message: 'User berhasil dihapus',
+      user: deletedUser[0]
+    });
+  } catch (error) {
+    res.status(401).json({ message: 'Token tidak valid' });
+  }
+});
+
+// Verify admin token
+app.get('/api/admin/verify', (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Token tidak ditemukan' });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ message: 'Akses ditolak' });
+    }
+
+    res.json({
+      user: {
+        id: decoded.id,
+        email: decoded.email,
+        role: 'admin',
+        name: 'Administrator'
+      }
+    });
+  } catch (error) {
+    res.status(401).json({ message: 'Token tidak valid' });
+  }
 });
 
 app.listen(PORT, () => {

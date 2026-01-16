@@ -54,11 +54,18 @@ Frontend akan berjalan di `http://localhost:3000`
 
 Setelah kedua aplikasi berjalan:
 
-1. Buka http://localhost:3000
+### User Registration
+1. Buka http://localhost:3001
 2. Klik "Daftar sekarang"
 3. Isi form dengan data Anda
 4. Setelah registrasi, Anda akan otomatis login
 5. Dashboard menampilkan profil Anda
+
+### Admin Login
+1. Buka http://localhost:3001/admin/login
+2. Email: `admin@gunung.com`
+3. Password: `admin123456`
+4. Anda akan masuk ke Admin Panel untuk mengelola user
 
 ## 🎨 Desain
 
@@ -121,6 +128,25 @@ GET    /api/auth/verify      - Verifikasi token
 - Quick access menu
 - Fitur akademik, jadwal, pesan, laporan
 - Tombol logout
+
+## 👨‍💼 Admin Panel
+
+### Fitur Admin
+- ✅ Login admin terpisah dengan password khusus
+- ✅ Dashboard admin dengan statistik user
+- ✅ Daftar semua user terdaftar
+- ✅ Hapus user jika diperlukan
+- ✅ Akses management sistem
+
+### Admin Credentials
+- Email: `admin@gunung.com`
+- Password: `admin123456`
+
+### Admin Dashboard
+- Total user terdaftar
+- User aktif
+- Tabel daftar user dengan detail
+- Aksi hapus user
 
 ---
 

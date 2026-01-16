@@ -22,4 +22,17 @@ export const login = (email, password) =>
 export const verifyToken = () =>
   API.get('/auth/verify');
 
+// Admin API
+export const adminLogin = (email, password) =>
+  API.post('/admin/login', { email, password });
+
+export const adminVerifyToken = () =>
+  API.get('/admin/verify');
+
+export const getUsers = () =>
+  API.get('/admin/users');
+
+export const deleteUser = (userId) =>
+  API.delete(`/admin/users/${userId}`);
+
 export default API;

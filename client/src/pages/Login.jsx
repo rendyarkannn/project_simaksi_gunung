@@ -123,6 +123,14 @@ function Login({ setIsAuthenticated }) {
                 Daftar sekarang
               </Link>
             </p>
+            <p className="text-gray-600 text-sm mt-2">
+              <Link
+                to="/admin/login"
+                className="text-red-600 font-semibold hover:text-red-700"
+              >
+                Login sebagai admin
+              </Link>
+            </p>
           </div>
 
           <div className="mt-8 pt-6 border-t border-gray-200 text-center text-xs text-gray-500">
